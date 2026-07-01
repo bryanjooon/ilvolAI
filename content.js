@@ -1,76 +1,46 @@
 // ilvolAI content script
-// This runs on every webpage. It creates the floating button and panel.
+// Injects a floating button + loads the panel from panel.html.
+// Listens for keyboard shortcut to toggle the panel.
 
 (function () {
-  // Don't inject twice if script re-runs
   if (window.__ilvolAI_loaded__) return;
   window.__ilvolAI_loaded__ = true;
 
-  let panelOpen = false;
-  let panelEl = null;
-  let floatBtnEl = null;
+  // ---- Floating button ----
+  const btn = document.createElement("div");
+  btn.id = "ilvolai-floating-btn";
+  btn.title = "ilvolAI (⌘⇧L)";
+  btn.textContent = "🚛";
+  document.body.appendChild(btn);
 
-  // ---- Floating button (the bubble) ----
-  function createFloatingButton() {
-    const btn = document.createElement("div");
-    btn.id = "ilvolai-floating-btn";
-    btn.title = "ilvolAI (⌘⇧L)";
-    btn.innerHTML = "🚛";
-    btn.addEventListener("click", togglePanel);
-    document.body.appendChild(btn);
-    floatBtnEl = btn;
-  }
+  // ---- Load panel.html into the page ----
+  // We use a <link> for the template fetch so it works on file:// and any site.
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  // We'll fetch the HTML via XHR since <link> can't load HTML
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", chrome.runtime.getURL("panel.html"), true);
+  xhr.onload = () => {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = xhr.responseText;
+    document.body.appendChild(wrap.firstElementChild);
+    // Now load the panel logic (which wires up form behavior)
+    const script = document.createElement("script");
+    script.src = chrome.runtime.getURL("panel.js");
+    document.body.appendChild(script);
+  };
+  xhr.send();
 
-  // ---- Main panel ----
-  function createPanel() {
-    const panel = document.createElement("div");
-    panel.id = "ilvolai-panel";
-    panel.style.display = "none";
-    panel.innerHTML = `
-      <div class="ilvolai-header">
-        <span class="ilvolai-title">🚛 ilvolAI</span>
-        <button class="ilvolai-close" aria-label="Close">×</button>
-      </div>
-      <div class="ilvolai-body">
-        <p class="ilvolai-hint">Panel is empty for now. Real load fields coming next.</p>
-        <div class="ilvolai-actions">
-          <button class="ilvolai-btn ilvolai-btn-paste">📋 Paste from clipboard</button>
-          <button class="ilvolai-btn ilvolai-btn-mic">🎤 Start listening</button>
-        </div>
-        <div class="ilvolai-actions">
-          <button class="ilvolai-btn ilvolai-btn-copy" disabled>📤 Copy driver message</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(panel);
-    panelEl = panel;
-
-    panel.querySelector(".ilvolai-close").addEventListener("click", togglePanel);
-    panel.querySelector(".ilvolai-btn-paste").addEventListener("click", onPasteClick);
-    panel.querySelector(".ilvolai-btn-mic").addEventListener("click", onMicClick);
-  }
-
+  // ---- Toggle panel ----
   function togglePanel() {
-    panelOpen = !panelOpen;
-    if (panelEl) {
-      panelEl.style.display = panelOpen ? "flex" : "none";
-    }
+    const panel = document.getElementById("ilvolai-panel");
+    if (!panel) return; // panel still loading
+    panel.style.display = panel.style.display === "none" ? "flex" : "none";
   }
+  btn.addEventListener("click", togglePanel);
 
-  // ---- Stub handlers (we'll wire these up properly next) ----
-  function onPasteClick() {
-    alert("Paste-from-clipboard is not wired up yet — next step!");
-  }
-  function onMicClick() {
-    alert("Mic listening is not wired up yet — coming after the form fields!");
-  }
-
-  // ---- Listen for the keyboard shortcut message from background.js ----
+  // ---- Keyboard shortcut from background.js ----
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg?.type === "TOGGLE_PANEL") togglePanel();
   });
-
-  // ---- Init ----
-  createFloatingButton();
-  createPanel();
 })();

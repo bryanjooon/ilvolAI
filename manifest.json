@@ -16,6 +16,12 @@
     "default_popup": "popup.html",
     "default_title": "ilvolAI"
   },
+  "web_accessible_resources": [
+    {
+      "resources": ["panel.html", "panel.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },

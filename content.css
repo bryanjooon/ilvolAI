@@ -1,4 +1,4 @@
-/* ilvolAI floating button + panel styles */
+/* ilvolAI — extension styles (injected into every page) */
 
 #ilvolai-floating-btn {
   position: fixed;
@@ -19,16 +19,14 @@
   user-select: none;
   transition: transform 0.15s ease;
 }
-#ilvolai-floating-btn:hover {
-  transform: scale(1.08);
-}
+#ilvolai-floating-btn:hover { transform: scale(1.08); }
 
 #ilvolai-panel {
   position: fixed;
   bottom: 96px;
   right: 24px;
-  width: 380px;
-  max-height: 70vh;
+  width: 400px;
+  max-height: 80vh;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
@@ -40,6 +38,7 @@
   overflow: hidden;
 }
 
+/* ---- Header ---- */
 .ilvolai-header {
   display: flex;
   align-items: center;
@@ -47,11 +46,9 @@
   padding: 12px 16px;
   background: #0f172a;
   color: #fff;
+  flex-shrink: 0;
 }
-.ilvolai-title {
-  font-weight: 600;
-  font-size: 15px;
-}
+.ilvolai-title { font-weight: 600; font-size: 15px; }
 .ilvolai-close {
   background: transparent;
   border: none;
@@ -61,24 +58,22 @@
   line-height: 1;
 }
 
+/* ---- Body scrollable ---- */
 .ilvolai-body {
-  padding: 16px;
+  padding: 12px 14px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
+  flex: 1;
 }
 
-.ilvolai-hint {
-  margin: 0;
-  font-size: 13px;
-  color: #64748b;
-}
-
+/* ---- Top action buttons ---- */
 .ilvolai-actions {
   display: flex;
   gap: 8px;
 }
+.ilvolai-actions--top { padding-bottom: 4px; border-bottom: 1px solid #f1f5f9; }
 
 .ilvolai-btn {
   flex: 1;
@@ -91,11 +86,83 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s ease;
+  font-family: inherit;
 }
-.ilvolai-btn:hover {
-  background: #e2e8f0;
+.ilvolai-btn:hover { background: #e2e8f0; }
+.ilvolai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---- Form sections ---- */
+.ilvolai-form { display: flex; flex-direction: column; gap: 10px; }
+
+.ilvolai-section {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px 12px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.ilvolai-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.ilvolai-section legend {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 0 6px;
+}
+
+/* ---- Form rows + labels ---- */
+.ilvolai-row {
+  display: grid;
+  grid-template-columns: 1fr 70px;
+  gap: 8px;
+}
+.ilvolai-state { max-width: 70px; }
+
+.ilvolai-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: #475569;
+  font-weight: 500;
+}
+.ilvolai-form label.ilvolai-full { width: 100%; }
+
+.ilvolai-form input,
+.ilvolai-form select,
+.ilvolai-form textarea {
+  padding: 7px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0f172a;
+  background: #fff;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+.ilvolai-form input:focus,
+.ilvolai-form select:focus,
+.ilvolai-form textarea:focus {
+  outline: none;
+  border-color: #0f172a;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.12);
+}
+.ilvolai-form textarea { resize: vertical; min-height: 44px; }
+
+/* ---- Conditional fields (hidden by default) ---- */
+.ilvolai-conditional[hidden] { display: none; }
+.ilvolai-conditional {
+  background: #f8fafc;
+  border-left: 3px solid #94a3b8;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+/* ---- Footer ---- */
+.ilvolai-foot {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  color: #94a3b8;
 }
