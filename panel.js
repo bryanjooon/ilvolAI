@@ -92,6 +92,19 @@
     return city || state || "?";
   }
 
+  // Plain-English labels for the driver — they care about whether they're
+  // waiting, dropping, or swapping. Use exactly the words dispatchers use.
+  const PICKUP_TYPE_LABEL = {
+    preloaded: "Preloaded — just hook & go (no waiting)",
+    live:      "Live load — wait while they load you",
+  };
+  const DELIVERY_TYPE_LABEL = {
+    live_unload:  "Live unload — wait while they unload you",
+    drop_bobtail: "Drop & bobtail — leave trailer, return empty",
+    drop_hook:    "Drop & hook — swap trailers",
+    lot_return:   "Lot return — drop trailer at a yard",
+  };
+
   // Driver-ready message — dumb-driver friendly, no jargon, no abbreviations they won't know
   function formatDriverMessage(d) {
     const lines = [];
@@ -101,6 +114,10 @@
     lines.push(`  ${fmtLocation(d.pickup_city, d.pickup_state)}`);
     lines.push(`  ${fmtDate(d.pickup_date)} at ${d.pickup_time || "?"}`);
 
+    if (PICKUP_TYPE_LABEL[d.pickup_type]) {
+      lines.push(`  📦 ${PICKUP_TYPE_LABEL[d.pickup_type]}`);
+    }
+
     if (d.pickup_empty === "yes" && (d.pickup_empty_city || d.pickup_empty_state)) {
       lines.push(`  ⚠️ Empty from: ${fmtLocation(d.pickup_empty_city, d.pickup_empty_state)}`);
     }
@@ -109,6 +126,10 @@
     lines.push(`DELIVER:`);
     lines.push(`  ${fmtLocation(d.delivery_city, d.delivery_state)}`);
     lines.push(`  ${fmtDate(d.delivery_date)} at ${d.delivery_time || "?"}`);
+
+    if (DELIVERY_TYPE_LABEL[d.delivery_type]) {
+      lines.push(`  📦 ${DELIVERY_TYPE_LABEL[d.delivery_type]}`);
+    }
 
     if (d.delivery_type === "lot_return" && (d.lot_return_city || d.lot_return_state)) {
       lines.push(`  ⚠️ Return trailer to: ${fmtLocation(d.lot_return_city, d.lot_return_state)}`);
