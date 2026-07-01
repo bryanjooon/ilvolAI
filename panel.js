@@ -65,15 +65,65 @@
     });
   }
 
-  // Placeholder — we'll polish this once you give feedback on tone
+  // Format a date as DD/MM/YYYY with optional (today) / (tomorrow) label.
+  // `dateStr` is in the form input's native format (YYYY-MM-DD).
+  function fmtDate(dateStr) {
+    if (!dateStr) return "?";
+    // Parse as local date (avoid UTC shift from new Date(iso))
+    const [y, m, d] = dateStr.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    if (isNaN(dt.getTime())) return dateStr;
+    const dd = String(d).padStart(2, "0");
+    const mm = String(m).padStart(2, "0");
+    const base = `${dd}/${mm}/${y}`;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffDays = Math.round((dt - today) / 86400000);
+    let tag = "";
+    if (diffDays === 0) tag = " (today)";
+    else if (diffDays === 1) tag = " (tomorrow)";
+    else if (diffDays === -1) tag = " (yesterday)";
+    return base + tag;
+  }
+
+  function fmtLocation(city, state) {
+    if (city && state) return `${city}, ${state}`;
+    return city || state || "?";
+  }
+
+  // Driver-ready message — dumb-driver friendly, no jargon, no abbreviations they won't know
   function formatDriverMessage(d) {
-    return `Load details:
-PU: ${d.pickup_city || "?"}, ${d.pickup_state || "?"} @ ${d.pickup_date || "?"} ${d.pickup_time || ""}
-DEL: ${d.delivery_city || "?"}, ${d.delivery_state || "?"} @ ${d.delivery_date || "?"} ${d.delivery_time || ""}
-Commodity: ${d.commodity || "?"}
-Weight: ${d.weight_lbs || "?"} lbs
-Rate: $${d.target_rate || "?"}
-Notes: ${d.notes || "—"}`;
+    const lines = [];
+    lines.push(`🚛 LOAD DETAILS`);
+    lines.push(``);
+    lines.push(`PICK UP:`);
+    lines.push(`  ${fmtLocation(d.pickup_city, d.pickup_state)}`);
+    lines.push(`  ${fmtDate(d.pickup_date)} at ${d.pickup_time || "?"}`);
+
+    if (d.pickup_empty === "yes" && (d.pickup_empty_city || d.pickup_empty_state)) {
+      lines.push(`  ⚠️ Empty from: ${fmtLocation(d.pickup_empty_city, d.pickup_empty_state)}`);
+    }
+
+    lines.push(``);
+    lines.push(`DELIVER:`);
+    lines.push(`  ${fmtLocation(d.delivery_city, d.delivery_state)}`);
+    lines.push(`  ${fmtDate(d.delivery_date)} at ${d.delivery_time || "?"}`);
+
+    if (d.delivery_type === "lot_return" && (d.lot_return_city || d.lot_return_state)) {
+      lines.push(`  ⚠️ Return trailer to: ${fmtLocation(d.lot_return_city, d.lot_return_state)}`);
+    }
+
+    lines.push(``);
+    lines.push(`WHAT YOU'RE HAULING:`);
+    lines.push(`  ${d.commodity || "?"} — ${d.weight_lbs || "?"} lbs`);
+
+    if (d.notes && d.notes.trim()) {
+      lines.push(``);
+      lines.push(`NOTES:`);
+      lines.push(`  ${d.notes.trim()}`);
+    }
+    return lines.join("\n");
   }
 
   function flashButton(label) {

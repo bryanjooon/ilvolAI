@@ -25,7 +25,7 @@
   position: fixed;
   bottom: 96px;
   right: 24px;
-  width: 400px;
+  width: 440px;
   max-height: 80vh;
   background: #ffffff;
   border-radius: 12px;
@@ -113,10 +113,10 @@
 /* ---- Form rows + labels ---- */
 .ilvolai-row {
   display: grid;
-  grid-template-columns: 1fr 70px;
+  grid-template-columns: 1fr 110px;
   gap: 8px;
 }
-.ilvolai-state { max-width: 70px; }
+.ilvolai-state { max-width: 110px; }
 
 .ilvolai-form label {
   display: flex;
