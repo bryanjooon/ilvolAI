@@ -102,7 +102,7 @@
     live_unload:  "Live unload — wait while they unload you",
     drop_bobtail: "Drop & bobtail — leave trailer, return empty",
     drop_hook:    "Drop & hook — swap trailers",
-    lot_return:   "Lot return — drop trailer at a yard",
+    lot_return:   "Lot return to shipper",
   };
 
   // Driver-ready message — dumb-driver friendly, no jargon, no abbreviations they won't know
