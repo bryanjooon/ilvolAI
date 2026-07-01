@@ -118,6 +118,17 @@
     lines.push(`WHAT YOU'RE HAULING:`);
     lines.push(`  ${d.commodity || "?"} — ${d.weight_lbs || "?"} lbs`);
 
+    if (d.miles) {
+      lines.push(`  Distance: ${d.miles} miles`);
+    }
+
+    if (d.target_rate) {
+      // Format with commas for readability: 2800 -> "2,800"
+      const rateFmt = Number(d.target_rate).toLocaleString("en-US");
+      lines.push(``);
+      lines.push(`💰 RATE: $${rateFmt}`);
+    }
+
     if (d.notes && d.notes.trim()) {
       lines.push(``);
       lines.push(`NOTES:`);
