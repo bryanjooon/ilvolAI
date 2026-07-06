@@ -10,8 +10,16 @@
         padding: 16px;
         color: #0f172a;
       }
-      h1 { font-size: 16px; margin: 0 0 8px; }
+      h1 { font-size: 16px; margin: 0 0 4px; }
       p  { font-size: 13px; color: #475569; margin: 0 0 12px; }
+      .user {
+        background: #f1f5f9;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 13px;
+        margin: 0 0 12px;
+      }
+      .user strong { color: #0f172a; }
       button {
         width: 100%;
         padding: 10px;
@@ -21,13 +29,36 @@
         border-radius: 6px;
         font-size: 13px;
         cursor: pointer;
+        font-weight: 500;
+      }
+      button.secondary {
+        background: #f1f5f9;
+        color: #0f172a;
+        margin-top: 8px;
+      }
+      button:hover { opacity: 0.9; }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .status {
+        font-size: 12px;
+        color: #dc2626;
+        margin: 8px 0 0;
+        min-height: 14px;
       }
     </style>
   </head>
   <body>
     <h1>🚛 ilvolAI</h1>
-    <p>Click the floating truck on any page, or press <b>⌘⇧L</b> to open the panel.</p>
-    <button id="open-panel">Open Panel</button>
+    <div id="signed-out">
+      <p>Sign in with Google to start extracting loads.</p>
+      <button id="sign-in">Sign in with Google</button>
+      <div class="status" id="status-out"></div>
+    </div>
+    <div id="signed-in" style="display: none;">
+      <p>Click to open the panel on the current page, or press <b>⌘⇧L</b>.</p>
+      <div class="user" id="user-info"></div>
+      <button id="open-panel">Open Panel</button>
+      <button id="sign-out" class="secondary">Sign out</button>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>

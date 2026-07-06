@@ -17,6 +17,35 @@
       </button>
     </div>
 
+    <!-- Mic mode: live transcript + stop button (hidden by default) -->
+    <div class="ilvolai-mic-panel" hidden>
+      <div class="ilvolai-mic-status">
+        <span class="ilvolai-mic-dot"></span>
+        <span class="ilvolai-mic-label">Listening…</span>
+      </div>
+      <div class="ilvolai-transcript" aria-live="polite"></div>
+      <div class="ilvolai-actions">
+        <button class="ilvolai-btn ilvolai-btn-stop" type="button">
+          ⏹ Stop
+        </button>
+        <button class="ilvolai-btn ilvolai-btn-clear" type="button">
+          ✕ Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Apply bar: shown after we have a transcript (mic or paste) -->
+    <div class="ilvolai-apply-bar" hidden>
+      <button class="ilvolai-btn ilvolai-btn-apply" type="button">
+        ✨ Apply to form
+      </button>
+      <button class="ilvolai-btn ilvolai-btn-edit" type="button">
+        ✏️ Edit transcript
+      </button>
+    </div>
+
+    <div class="ilvolai-status" id="ilvolai-status"></div>
+
     <form id="ilvolai-form" class="ilvolai-form" autocomplete="off">
 
       <!-- ============ PICKUP ============ -->
@@ -25,28 +54,28 @@
 
         <div class="ilvolai-row">
           <label>
-            <span>City</span>
+            <span>City <em class="ilvolai-confidence" data-for="pickup_city"></em></span>
             <input type="text" name="pickup_city" placeholder="e.g. Dallas" />
           </label>
           <label class="ilvolai-state">
-            <span>State</span>
+            <span>State <em class="ilvolai-confidence" data-for="pickup_state"></em></span>
             <input type="text" name="pickup_state" maxlength="2" placeholder="TX" />
           </label>
         </div>
 
         <div class="ilvolai-row">
           <label>
-            <span>Date</span>
+            <span>Date <em class="ilvolai-confidence" data-for="pickup_date"></em></span>
             <input type="date" name="pickup_date" />
           </label>
           <label>
-            <span>Time</span>
+            <span>Time <em class="ilvolai-confidence" data-for="pickup_time"></em></span>
             <input type="text" name="pickup_time" placeholder="20:00" inputmode="numeric" />
           </label>
         </div>
 
         <label class="ilvolai-full">
-          <span>Pickup type</span>
+          <span>Pickup type <em class="ilvolai-confidence" data-for="pickup_type"></em></span>
           <select name="pickup_type">
             <option value="">— select —</option>
             <option value="preloaded">Preloaded (drop & hook)</option>
@@ -55,7 +84,7 @@
         </label>
 
         <label class="ilvolai-full">
-          <span>Pickup empty first?</span>
+          <span>Pickup empty first? <em class="ilvolai-confidence" data-for="pickup_empty"></em></span>
           <select name="pickup_empty" data-conditional="pickup_empty_at_wrap">
             <option value="no">No</option>
             <option value="yes">Yes — bobtail from another location first</option>
@@ -65,11 +94,11 @@
         <div class="ilvolai-conditional" data-show-when="pickup_empty=yes" hidden>
           <div class="ilvolai-row">
             <label>
-              <span>Empty from — City</span>
+              <span>Empty from — City <em class="ilvolai-confidence" data-for="pickup_empty_city"></em></span>
               <input type="text" name="pickup_empty_city" placeholder="e.g. Fort Worth" />
             </label>
             <label class="ilvolai-state">
-              <span>State</span>
+              <span>State <em class="ilvolai-confidence" data-for="pickup_empty_state"></em></span>
               <input type="text" name="pickup_empty_state" maxlength="2" placeholder="TX" />
             </label>
           </div>
@@ -82,28 +111,28 @@
 
         <div class="ilvolai-row">
           <label>
-            <span>City</span>
+            <span>City <em class="ilvolai-confidence" data-for="delivery_city"></em></span>
             <input type="text" name="delivery_city" placeholder="e.g. Atlanta" />
           </label>
           <label class="ilvolai-state">
-            <span>State</span>
+            <span>State <em class="ilvolai-confidence" data-for="delivery_state"></em></span>
             <input type="text" name="delivery_state" maxlength="2" placeholder="GA" />
           </label>
         </div>
 
         <div class="ilvolai-row">
           <label>
-            <span>Date</span>
+            <span>Date <em class="ilvolai-confidence" data-for="delivery_date"></em></span>
             <input type="date" name="delivery_date" />
           </label>
           <label>
-            <span>Time</span>
+            <span>Time <em class="ilvolai-confidence" data-for="delivery_time"></em></span>
             <input type="text" name="delivery_time" placeholder="06:00" inputmode="numeric" />
           </label>
         </div>
 
         <label class="ilvolai-full">
-          <span>Delivery type</span>
+          <span>Delivery type <em class="ilvolai-confidence" data-for="delivery_type"></em></span>
           <select name="delivery_type">
             <option value="">— select —</option>
             <option value="live_unload">Live unload (driver waits)</option>
@@ -116,11 +145,11 @@
         <div class="ilvolai-conditional" data-show-when="delivery_type=lot_return" hidden>
           <div class="ilvolai-row">
             <label>
-              <span>Return to — City</span>
+              <span>Return to — City <em class="ilvolai-confidence" data-for="lot_return_city"></em></span>
               <input type="text" name="lot_return_city" placeholder="e.g. Atlanta" />
             </label>
             <label class="ilvolai-state">
-              <span>State</span>
+              <span>State <em class="ilvolai-confidence" data-for="lot_return_state"></em></span>
               <input type="text" name="lot_return_state" maxlength="2" placeholder="GA" />
             </label>
           </div>
@@ -132,28 +161,28 @@
         <legend>📦 Load details</legend>
 
         <label class="ilvolai-full">
-          <span>Commodity</span>
+          <span>Commodity <em class="ilvolai-confidence" data-for="commodity"></em></span>
           <input type="text" name="commodity" placeholder="e.g. Frozen chicken, auto parts" />
         </label>
 
         <div class="ilvolai-row">
           <label>
-            <span>Weight (lbs)</span>
+            <span>Weight (lbs) <em class="ilvolai-confidence" data-for="weight_lbs"></em></span>
             <input type="number" name="weight_lbs" min="0" placeholder="42000" />
           </label>
           <label>
-            <span>Miles</span>
+            <span>Miles <em class="ilvolai-confidence" data-for="miles"></em></span>
             <input type="number" name="miles" min="0" placeholder="780" />
           </label>
         </div>
 
         <label class="ilvolai-full">
-          <span>Best rate ($)</span>
+          <span>Best rate ($) <em class="ilvolai-confidence" data-for="target_rate"></em></span>
           <input type="number" name="target_rate" min="0" step="0.01" placeholder="2800" />
         </label>
 
         <label class="ilvolai-full">
-          <span>Additional notes</span>
+          <span>Additional notes <em class="ilvolai-confidence" data-for="notes"></em></span>
           <textarea name="notes" rows="2" placeholder="Hazmat, appointment required, lumper, etc."></textarea>
         </label>
 

@@ -1,17 +1,27 @@
 {
   "manifest_version": 3,
   "name": "ilvolAI",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "AI-powered load extraction for dispatchers",
   "permissions": [
     "activeTab",
     "scripting",
     "storage",
-    "microphone"
+    "microphone",
+    "identity"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "https://ilvolai-backend.*.workers.dev/*"
   ],
+  "oauth2": {
+    "client_id": "REPLACE_WITH_YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "openid",
+      "email",
+      "profile"
+    ]
+  },
   "action": {
     "default_popup": "popup.html",
     "default_title": "ilvolAI"
